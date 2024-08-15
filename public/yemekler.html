@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurme - Yemekler</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-red-900 shadow-md">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <h1 class="text-3xl font-bold text-white">Sonradan Gurme</h1>
+                </div>
+                <div class="flex-1 flex justify-center items-center px-2">
+                    <div class="w-full max-w-lg lg:max-w-xs">
+                        <label for="search" class="sr-only">Search</label>
+                        <div class="relative">
+                            <input id="searchInput" class="block w-full bg-red-800 text-white rounded-md pl-10 pr-3 py-2 leading-5 placeholder-red-400 focus:outline-none focus:bg-red-700 focus:ring-1 focus:ring-orange-500" placeholder="Ara..." type="search">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12.9 14.32a8 8 0 111.414-1.414l4.287 4.286a1 1 0 01-1.415 1.415l-4.286-4.287zM8 14A6 6 0 108 2a6 6 0 000 12z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="searchYemek()" class="bg-gray-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-4">Ara</button>
+                </div>
+                <div class="flex space-x-4 items-center">
+                    <a href="/public/" class="bg-gray-700 hover:bg-yellow-600 text-white font-semibold h-8 px-4 rounded flex items-center">Anasayfa</a>
+                    <a href="/hakkımızda.html" class="bg-gray-700 hover:bg-yellow-600 text-white font-semibold h-8 px-4 rounded flex items-center">Hakkımızda</a>
+                    <a href="/public/yemekler.html" class="bg-gray-700 hover:bg-yellow-600 text-white font-semibold h-8 px-4 rounded flex items-center">Yemekler</a>
+                    <a href="#" class="bg-gray-700 hover:bg-yellow-600 text-white font-semibold h-8 px-4 rounded flex items-center">İletişim</a>
+                    <a href="/public/login.html" class="bg-gray-700 hover:bg-blue-500 text-white font-semibold h-8 px-4 rounded flex items-center">Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Yemekler Listesi -->
+    <div class="bg-red-300 container mx-auto p-8">
+        <div id="kategoriListesi">
+            <!-- Kategoriler burada listelenecek -->
+        </div>
+    </div>
+
+    <!-- Modal Yapısı -->
+    <div id="myModal" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-4xl relative">
+            <span onclick="closeModal()" class="absolute top-4 right-4 text-2xl text-gray-600 hover:text-gray-800 cursor-pointer">&larr;</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <img id="modalImage" class="w-full h-48 object-cover md:col-span-1" src="" alt="">
+                <div class="md:col-span-2">
+                    <h3 id="modalYemekAdi" class="text-xl font-semibold text-gray-800"></h3>
+                    <p id="modalRestoran" class="text-gray-500 mt-2"></p>
+                    <h4 class="text-lg font-semibold text-gray-700 mt-4">Yorumlar</h4>
+                    <div id="previousComments" class="mt-4">
+                        <!-- Önceden yapılmış yorumlar burada gösterilecek -->
+                    </div>
+                    <textarea id="newComment" class="w-full p-2 border border-gray-300 rounded mt-4" placeholder="Yorumunuzu yazın..."></textarea>
+                    <button onclick="submitComment()" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded mt-4">Gönder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sayfa yüklendiğinde yemekleri yükle
+        document.addEventListener('DOMContentLoaded', function() {
+            loadKategoriler();
+        });
+
+        // Yemekleri kategorilere göre ayırma ve yükleme fonksiyonu
+        function loadKategoriler() {
+            const kategoriListesi = document.getElementById('kategoriListesi');
+            kategoriListesi.innerHTML = '';
+
+            let yemekler = JSON.parse(localStorage.getItem('yemekler')) || [];
+            let kategoriler = {
+                'baslangiclar': [],
+                'ana-yemekler': [],
+                'tatlilar': []
+            };
+
+            yemekler.forEach(function(yemek) {
+                kategoriler[yemek.kategori].push(yemek);
+            });
+
+            Object.keys(kategoriler).forEach(function(kategori) {
+                if (kategoriler[kategori].length > 0) {
+                    const kategoriDiv = document.createElement('div');
+                    kategoriDiv.className = 'mb-8';
+
+                    kategoriDiv.innerHTML = `
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">${kategori.charAt(0).toUpperCase() + kategori.slice(1)}</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${kategoriler[kategori].map((yemek, index) => `
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" onclick="showModal('${yemek.resim}', '${yemek.adi}', '${yemek.restoran}')">
+                                    <img class="w-full h-48 object-cover" src="${yemek.resim}" alt="${yemek.adi}">
+                                    <div class="p-4">
+                                        <h3 class="text-xl font-semibold text-gray-800">${yemek.adi}</h3>
+                                        <p class="text-gray-600 mt-2">${yemek.aciklama}</p>
+                                        <p class="text-gray-500 mt-2">Kategori: ${yemek.kategori}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    kategoriListesi.appendChild(kategoriDiv);
+                }
+            });
+        }
+
+        // Modal açma fonksiyonu
+        function showModal(resim, yemekAdi, restoran) {
+            document.getElementById('modalImage').src = resim;
+            document.getElementById('modalYemekAdi').textContent = yemekAdi;
+            document.getElementById('modalRestoran').textContent = `Restoran: ${restoran}`;
+            document.getElementById('previousComments').innerHTML = '';
+
+            // Önceki yorumları göster
+            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+            let yemekYorumlari = yorumlar.filter(y => y.yemekAdi === yemekAdi);
+            yemekYorumlari.forEach(function(yorum) {
+                let p = document.createElement('p');
+                p.textContent = yorum.yorum;
+                p.className = 'text-gray-700 mt-2';
+                document.getElementById('previousComments').appendChild(p);
+            });
+
+            document.getElementById('myModal').classList.remove('hidden');
+        }
+
+        // Modal kapama fonksiyonu
+        function closeModal() {
+            document.getElementById('myModal').classList.add('hidden');
+        }
+
+        // Yorum gönderme fonksiyonu
+        function submitComment() {
+            let yemekAdi = document.getElementById('modalYemekAdi').textContent;
+            let yorum = document.getElementById('newComment').value;
+            if (yorum.trim() !== '') {
+                let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+                yorumlar.push({ yemekAdi: yemekAdi, yorum: yorum });
+                localStorage.setItem('yorumlar', JSON.stringify(yorumlar));
+
+                let p = document.createElement('p');
+                p.textContent = yorum;
+                p.className = 'text-gray-700 mt-2';
+                document.getElementById('previousComments').appendChild(p);
+
+                document.getElementById('newComment').value = ''; // Yorum alanını temizle
+                alert('Yorumunuz kaydedildi!');
+                closeModal(); // Modalı kapat
+            } else {
+                alert('Yorum alanı boş olamaz.');
+            }
+        }
+    </script>
+</body>
+</html>

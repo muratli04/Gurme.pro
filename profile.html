@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-red-900 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <h1 class="text-3xl font-bold text-white">Gurme</h1>
+                </div>
+                <div class="flex space-x-4 items-center">
+                    <a href="/profile.html" class="bg-gray-700 hover:bg-green-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
+                <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-red-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
+            </div>
+        </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Section -->
+    <div class="container mx-auto p-8 mt-10">
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <form id="profileForm">
+                <div class="flex items-center space-x-4">
+                    <img class="w-24 h-24 rounded-full" src="/images/admin.jpg" alt="Profil Fotoğrafı">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800"><input type="text" id="username" name="username" class="border-none bg-transparent" value="Murat Atlı" disabled></h2>
+                        <p class="text-gray-600"><input type="email" id="email" name="email" class="border-none bg-transparent" value="admin@gmail.com" disabled></p>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold text-gray-800">Kişisel Bilgiler</h3>
+                    <div class="mt-4">
+                        <p><span class="font-bold text-gray-700">Telefon:</span> <input type="text" id="phone" name="phone" class="border-none bg-transparent" value="+90 123 456 7890" disabled></p>
+                        <p><span class="font-bold text-gray-700">Adres:</span> <input type="text" id="address" name="address" class="border-none bg-transparent" value="Lefkoşa,Kıbrıs" disabled></p>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold text-gray-800">Hakkımda</h3>
+                    <textarea id="about" name="about" class="mt-4 w-full border-none bg-transparent text-gray-600" rows="4" disabled>
+Murat
+                    </textarea>
+                </div>
+                <div class="mt-6">
+                    <button type="button" id="editButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Profili Düzenle
+                    </button>
+                    <button type="submit" id="saveButton" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">
+                        Kaydet
+                    </button>
+                    <button type="button" id="cancelButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">
+                        İptal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-red-900 text-white py-4 mt-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; </p>
+        </div>
+    </footer>
+
+    <script>
+        const editButton = document.getElementById('editButton');
+        const saveButton = document.getElementById('saveButton');
+        const cancelButton = document.getElementById('cancelButton');
+
+        const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea');
+
+        editButton.addEventListener('click', function() {
+            inputs.forEach(input => input.disabled = false);
+            editButton.classList.add('hidden');
+            saveButton.classList.remove('hidden');
+            cancelButton.classList.remove('hidden');
+        });
+
+        cancelButton.addEventListener('click', function() {
+            inputs.forEach(input => input.disabled = true);
+            editButton.classList.remove('hidden');
+            saveButton.classList.add('hidden');
+            cancelButton.classList.add('hidden');
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            inputs.forEach(input => input.disabled = true);
+            editButton.classList.remove('hidden');
+            saveButton.classList.add('hidden');
+            cancelButton.classList.add('hidden');
+            alert('Profil bilgileri kaydedildi!');
+        });
+    </script>
+</body>
+</html>

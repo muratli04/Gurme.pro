@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurme</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header img {
+            max-width: 150px;
+            border-radius: 10px;
+        }
+
+        .modal-close {
+            font-size: 30px;
+            cursor: pointer;
+            color: #000;
+        }
+
+        .modal-body {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .modal-body h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+        }
+
+        .modal-footer textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .modal-footer button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-footer button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-red-900 shadow-md">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <h1 class="text-3xl font-bold text-white">Sonradan Gurme</h1>
+                </div>
+                <div class="flex-1 flex justify-center items-center px-2">
+                    <div class="w-full max-w-lg lg:max-w-xs">
+                        <label for="search" class="sr-only">Search</label>
+                        <div class="relative">
+                            <input id="searchInput" class="block w-full bg-red-800 text-white rounded-md pl-10 pr-3 py-2 leading-5 placeholder-red-400 focus:outline-none focus:bg-red-700 focus:ring-1 focus:ring-orange-500" placeholder="Ara..." type="search">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12.9 14.32a8 8 0 111.414-1.414l4.287 4.286a1 1 0 01-1.415 1.415l-4.286-4.287zM8 14A6 6 0 108 2a6 6 0 000 12z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="searchYemek()" class="bg-gray-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-4">Ara</button>
+                </div>
+                <div class="flex space-x-4 items-center">
+                    <a href="/public/index.html" class="bg-gray-700 hover:bg-yellow-600 text-white font-semibold h-8 px-4 rounded flex items-center">Anasayfa</a>
+                    <a href="/hakkımızda.html" class="bg-gray-700 hover:bg-yellow-600 text-white font-semibold h-8 px-4 rounded flex items-center">Hakkımızda</a>
+                    <a href="/public/yemekler.html" class="bg-gray-700 hover:bg-yellow-600 text-white font-semibold h-8 px-4 rounded flex items-center">Yemekler</a>
+                    <a href="#" class="bg-gray-700 hover:bg-yellow-600 text-white font-semibold h-8 px-4 rounded flex items-center">İletişim</a>
+                    <a href="/public/login.html" class="bg-gray-700 hover:bg-blue-500 text-white font-semibold h-8 px-4 rounded flex items-center">Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-cover bg-center h-screen" style="background-image: url('');">
+        <div class="flex flex-col h-full bg-red-900 bg-opacity-50">
+            <!-- Başlık ve Buton -->
+            <div class="flex items-center justify-center pt-12">
+                <div class="text-center text-white">
+                    
+                    
+                </div>
+            </div>
+
+            <!-- Yemek Listesi -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 mx-auto px-4">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden relative">
+                    <img class="w-full h-48 object-cover cursor-pointer" src="https://avatars.mds.yandex.net/i?id=cead31ffe275d3796c5f4cc43fe23429-5843558-images-thumbs&n=13" alt="Karnıyarık" onclick="showModal(this, 'Karnıyarık', 'Mezzaluna')">
+                    <div class="p-4 text-center">
+                        <h3 class="text-xl font-semibold text-gray-800">Karnıyarık</h3>
+                        <p class="text-gray-600 mt-2">Efsane Lezzet</p>
+                    </div>
+                </div>
+            
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden relative">
+                    <img class="w-full h-48 object-cover cursor-pointer" src="https://www.diyetkolik.com/site_media/media/foodrecipe_images/citirmanti.jpg" alt="Mantı" onclick="showModal(this, 'Mantı', 'Mantı Sofrası')">
+                    <div class="p-4 text-center">
+                        <h3 class="text-xl font-semibold text-gray-800">Mantı</h3>
+                        <p class="text-gray-600 mt-2">Efsane Lezzet</p>
+                    </div>
+                </div>
+            
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden relative">
+                    <img class="w-full h-48 object-cover cursor-pointer" src="https://avatars.mds.yandex.net/i?id=b5aced03c697ade36e425e1ec0ed5c1179c9a2a7-10594781-images-thumbs&n=13" alt="Kremalı Makarna" onclick="showModal(this, 'Kremalı Makarna', 'Babylon')">
+                    <div class="p-4 text-center">
+                        <h3 class="text-xl font-semibold text-gray-800">Kremalı Makarna</h3>
+                        <p class="text-gray-600 mt-2">Efsane Lezzet</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Modal Yapısı -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img id="modalImg" src="" alt="Yemek Resmi">
+                <div>
+                    <h3 id="modalYemekAdi"></h3>
+                    <p id="modalRestoran"></p>
+                </div>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalYorumlar">
+                <!-- Yorumlar buraya yüklenecek -->
+            </div>
+            <div class="modal-footer">
+                <textarea id="newComment" placeholder="Yorumunuzu yazın..."></textarea>
+                <button onclick="submitComment()">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentYemek = '';
+
+        function showModal(element, yemekAdi, restoran) {
+            currentYemek = yemekAdi;
+            document.getElementById("modalImg").src = element.src;
+            document.getElementById("modalYemekAdi").innerText = yemekAdi;
+            document.getElementById("modalRestoran").innerText = restoran;
+
+            loadYorumlar();
+
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        function loadYorumlar() {
+            const yorumlarDiv = document.getElementById('modalYorumlar');
+            yorumlarDiv.innerHTML = '';
+            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+            let filteredYorumlar = yorumlar.filter(yorum => yorum.yemekAdi === currentYemek);
+
+            if (filteredYorumlar.length > 0) {
+                filteredYorumlar.forEach(yorum => {
+                    let yorumDiv = document.createElement('div');
+                    yorumDiv.className = 'mb-4 p-2 bg-gray-100 rounded';
+                    yorumDiv.innerText = yorum.yorum;
+                    yorumlarDiv.appendChild(yorumDiv);
+                });
+            } else {
+                yorumlarDiv.innerHTML = '<p>Henüz yorum yapılmamış.</p>';
+            }
+        }
+
+        function submitComment() {
+            const comment = document.getElementById('newComment').value;
+            if (comment.trim() !== '') {
+                let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+                yorumlar.push({ yemekAdi: currentYemek, yorum: comment });
+                localStorage.setItem('yorumlar', JSON.stringify(yorumlar));
+                document.getElementById('newComment').value = '';
+                loadYorumlar();
+                alert('Yorumunuz kaydedildi!');
+            } else {
+                alert('Yorum alanı boş olamaz.');
+            }
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-red-800 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+            <p>&copy; 2024 Gurme. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurme - Kategoriler</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-900 p-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="text-white text-lg font-semibold">KATEGORİLER</div>
+            <div class="flex space-x-4 items-center">
+                <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
+                <a href="/public/index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
+                <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="bg-gray-600 w-full md:w-64 text-white md:h-screen flex-shrink-0">
+            <div class="p-4 text-xl font-semibold">Menü</div>
+            <ul class="space-y-2">
+                <li>
+                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-gray-700">Yemekler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-gray-700">Yorumlar</a>
+                </li>
+                <li>
+                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-gray-700">Kategoriler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-gray-700">Yemek Ekle</a>
+                </li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="container mx-auto p-8">
+            <h1 class="text-3xl font-bold mb-4">Yemek Kategorileri</h1>
+
+            <div id="kategoriListesi" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Kategoriler burada listelenecek -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadKategoriler();
+        });
+
+        function loadKategoriler() {
+            const kategoriListesi = document.getElementById('kategoriListesi');
+            kategoriListesi.innerHTML = '';
+
+            let yemekler = JSON.parse(localStorage.getItem('yemekler')) || [];
+            let kategoriler = {
+                'Başlangıç': [],
+                'Ana yemek': [],
+                'Tatlılar': []
+            };
+
+            yemekler.forEach(function(yemek) {
+                kategoriler[yemek.kategori].push(yemek);
+            });
+
+            Object.keys(kategoriler).forEach(function(kategori) {
+                if (kategoriler[kategori].length > 0) {
+                    const kategoriDiv = document.createElement('div');
+                    kategoriDiv.className = 'bg-white rounded-lg shadow-md overflow-hidden';
+                    kategoriDiv.innerHTML = `
+                        <div class="p-4 text-center">
+                            <h3 class="text-xl font-semibold text-gray-800">${kategori.charAt(0).toUpperCase() + kategori.slice(1)}</h3>
+                            <ul class="text-gray-600 mt-2">
+                                ${kategoriler[kategori].map(yemek => `
+                                    <li class="mb-4">
+                                        <img class="w-full h-32 object-cover mb-2" src="${yemek.resim}" alt="${yemek.adi}">
+                                        <span>${yemek.adi}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                    kategoriListesi.appendChild(kategoriDiv);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

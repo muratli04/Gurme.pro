@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurme - Anasayfa</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-900 p-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="text-white text-lg font-semibold">YORUMLAR</div>
+            <div class="flex space-x-4 items-center">
+                <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
+                <a href="/public/index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
+                <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="bg-gray-600 w-full md:w-64 text-white md:h-screen flex-shrink-0">
+            <div class="p-4 text-xl font-semibold">Menü</div>
+            <ul class="space-y-2">
+                <li>
+                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-gray-700">Yemekler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-gray-700">Yorumlar</a>
+                </li>
+                <li>
+                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-gray-700">Kategoriler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-gray-700">Yemek Ekle</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Yorumlar Alanı -->
+        <main class="flex-1 p-8">
+            <h1 class="text-3xl font-bold mb-4">Anasayfa - Yorumlar</h1>
+            <div id="yorumlarListesi" class="space-y-4">
+                <!-- Yorumlar burada yüklenecek -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadYorumlar();
+        });
+
+        // Yorumları Local Storage'dan yükleme fonksiyonu
+        function loadYorumlar() {
+            const yorumlarListesi = document.getElementById('yorumlarListesi');
+            yorumlarListesi.innerHTML = '';
+
+            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+            yorumlar.forEach(function(yorum, index) {
+                const yorumDiv = document.createElement('div');
+                yorumDiv.className = 'bg-white p-4 rounded-lg shadow-md';
+                yorumDiv.innerHTML = `
+                    <p class="text-gray-800"><strong>${yorum.yemekAdi}</strong> için yapılan yorum:</p>
+                    <p class="text-gray-600 mt-2">${yorum.yorum}</p>
+                    <div class="mt-4">
+                        <button onclick="onaylaYorum(${index})" class="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded mr-2">Onayla</button>
+                        <button onclick="silYorum(${index})" class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded">Sil</button>
+                    </div>
+                `;
+                yorumlarListesi.appendChild(yorumDiv);
+            });
+        }
+
+        // Yorum onaylama fonksiyonu
+        function onaylaYorum(index) {
+            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+            yorumlar[index].onayli = true; // Onaylı durumu ekleyebilirsiniz
+            localStorage.setItem('yorumlar', JSON.stringify(yorumlar));
+            alert("Yorum onaylandı.");
+            loadYorumlar(); // Listeyi yeniden yükle
+        }
+
+        // Yorum silme fonksiyonu
+        function silYorum(index) {
+            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+            yorumlar.splice(index, 1); // Belirtilen indeksteki yorumu sil
+            localStorage.setItem('yorumlar', JSON.stringify(yorumlar));
+            loadYorumlar(); // Listeyi yeniden yükle
+        }
+    </script>
+</body>
+</html>

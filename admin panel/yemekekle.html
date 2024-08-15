@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurme - Yemek Ekle</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-900 p-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="text-white text-lg font-semibold">YEMEK EKLE</div>
+            <div class="flex space-x-4 items-center">
+                <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
+                <a href="/public/index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
+                <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
+            </div>
+        </div>
+    </nav>
+    <div class="flex flex-col md:flex-row">
+
+        <!-- Sidebar -->
+        <aside class="bg-gray-600 w-full md:w-64 text-white md:h-screen flex-shrink-0">
+            <div class="p-4 text-xl font-semibold">Menü</div>
+            <ul class="space-y-2">
+                <li>
+                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-gray-700">Yemekler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-gray-700">Yorumlar</a>
+                </li>
+                <li>
+                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-gray-700">Kategoriler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-gray-700">Yemek Ekle
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="container mx-auto p-8">
+            <h1 class="text-3xl font-bold mb-4">Yemek Ekle</h1>
+    
+            <form id="yemekForm" class="mb-8">
+                <div class="mb-4">
+                    <label for="yemekAdi" class="block text-gray-700 font-bold mb-2">Yemek Adı:</label>
+                    <input type="text" id="yemekAdi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="yemekAciklamasi" class="block text-gray-700 font-bold mb-2">Yemek Açıklaması:</label>
+                    <textarea id="yemekAciklamasi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="yemekResmi" class="block text-gray-700 font-bold mb-2">Yemek Resim URL'si:</label>
+                    <input type="text" id="yemekResmi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="yemekKategorisi" class="block text-gray-700 font-bold mb-2">Yemek Kategorisi:</label>
+                    <select id="yemekKategorisi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="baslangiclar">Başlangıçlar</option>
+                        <option value="ana-yemekler">Ana Yemekler</option>
+                        <option value="tatlilar">Tatlılar</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="restoranAdi" class="block text-gray-700 font-bold mb-2">Restoran Adı:</label>
+                    <input type="text" id="restoranAdi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Ekle
+                </button>
+            </form>
+        </div>
+    
+        <script>
+            // Form gönderildiğinde yemek ekle
+            document.getElementById('yemekForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                addYemek();
+            });
+    
+            // Yemek ekleme fonksiyonu
+            function addYemek() {
+                const yemekAdi = document.getElementById('yemekAdi').value;
+                const yemekAciklamasi = document.getElementById('yemekAciklamasi').value;
+                const yemekResmi = document.getElementById('yemekResmi').value;
+                const yemekKategorisi = document.getElementById('yemekKategorisi').value;
+                const restoranAdi = document.getElementById('restoranAdi').value;
+    
+                const yeniYemek = {
+                    adi: yemekAdi,
+                    aciklama: yemekAciklamasi,
+                    resim: yemekResmi,
+                    kategori: yemekKategorisi,
+                    restoran: restoranAdi,
+                    onayli: false
+                };
+    
+                let adminYemekler = JSON.parse(localStorage.getItem('adminYemekler')) || [];
+                adminYemekler.push(yeniYemek);
+                localStorage.setItem('adminYemekler', JSON.stringify(adminYemekler));
+    
+                document.getElementById('yemekForm').reset(); // Formu temizle
+                alert('Yemek eklendi ve admin paneline yönlendirildi!');
+            }
+        </script>
+</body>
+</html>
