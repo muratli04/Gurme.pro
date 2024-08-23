@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gurme - Anasayfa</title>
+    <title>Gurme - Admin Panel Restoran Yorumları</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
@@ -11,7 +11,7 @@
     <!-- Navbar -->
     <nav class="bg-gradient-to-r from-red-500 via-purple-500 to-pink-500 p-4 shadow-md">
         <div class="container mx-auto flex items-center justify-between">
-            <div class="text-white text-lg font-semibold">YORUMLAR</div>
+            <div class="text-white text-lg font-semibold">ADMIN PANEL - RESTORAN YORUMLARI</div>
             <div class="flex space-x-4 items-center">
                 <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
                 <a href="/public/index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
@@ -34,6 +34,9 @@
                     <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-purple-700">Yorumlar</a>
                 </li>
                 <li>
+                    <a href="/admin panel/restoranekle.html" class="block p-4 hover:bg-purple-700">Restoran Yorumları</a>
+                </li>
+                <li>
                     <a href="/admin panel/kategori.html" class="block p-4 hover:bg-purple-700">Kategoriler</a>
                 </li>
                 <li>
@@ -45,7 +48,7 @@
             </ul>
         </aside>
 
-        <!-- Yorumlar Alanı -->
+        <!-- Yorumlar Yönetim Alanı -->
         <main class="flex-1 p-8">
             <div id="yorumlarListesi" class="space-y-4">
                 <!-- Yorumlar burada yüklenecek -->
@@ -55,20 +58,26 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            loadYorumlar();
+            loadRestoranYorumlar(); // Sayfa yüklendiğinde yorumları yükle
         });
 
-        // Yorumları Local Storage'dan yükleme fonksiyonu
-        function loadYorumlar() {
+        // Yorumları LocalStorage'dan yükleme ve admin panelde listeleme fonksiyonu
+        function loadRestoranYorumlar() {
             const yorumlarListesi = document.getElementById('yorumlarListesi');
             yorumlarListesi.innerHTML = '';
 
-            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+            let yorumlar = JSON.parse(localStorage.getItem('adminYorumlar')) || [];
+
+            if (yorumlar.length === 0) {
+                yorumlarListesi.innerHTML = '<p class="text-gray-600">Henüz onay bekleyen restoran yorumu yok.</p>';
+                return;
+            }
+
             yorumlar.forEach(function(yorum, index) {
                 const yorumDiv = document.createElement('div');
                 yorumDiv.className = 'bg-white p-4 rounded-lg shadow-md';
                 yorumDiv.innerHTML = `
-                    <p class="text-gray-800"><strong>${yorum.yemekAdi || yorum.restoranAdi}</strong> için yapılan yorum:</p>
+                    <p class="text-gray-800"><strong>${yorum.restoranAdi}</strong> için yapılan yorum:</p>
                     <p class="text-gray-600 mt-2">${yorum.yorum}</p>
                     <div class="mt-4">
                         <button onclick="onaylaYorum(${index})" class="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded mr-2">Onayla</button>
@@ -81,57 +90,28 @@
 
         // Yorum onaylama fonksiyonu
         function onaylaYorum(index) {
-            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
-            yorumlar[index].onayli = true; // Onaylı durumunu ekleyin
-            localStorage.setItem('yorumlar', JSON.stringify(yorumlar));
-            alert("Yorum onaylandı.");
-            loadYorumlar(); // Listeyi yeniden yükle
+            let adminYorumlar = JSON.parse(localStorage.getItem('adminYorumlar')) || [];
+            let onayliYorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
+
+            const onaylananYorum = adminYorumlar.splice(index, 1)[0]; // Admin'den kaldır
+            onaylananYorum.onayli = true; // Yorum onaylı duruma geçiyor
+            onayliYorumlar.push(onaylananYorum); // Onaylı yorumlara ekle
+
+            localStorage.setItem('adminYorumlar', JSON.stringify(adminYorumlar)); // Admin panelindeki yorumları güncelle
+            localStorage.setItem('yorumlar', JSON.stringify(onayliYorumlar)); // Onaylanan yorumları kaydet
+
+            loadRestoranYorumlar(); // Listeyi yeniden yükle
+            alert("Yorum onaylandı ve restoran sayfasında görünecek.");
         }
 
         // Yorum silme fonksiyonu
         function silYorum(index) {
-            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
-            yorumlar.splice(index, 1); // Belirtilen indeksteki yorumu sil
-            localStorage.setItem('yorumlar', JSON.stringify(yorumlar));
-            loadYorumlar(); // Listeyi yeniden yükle
-        }
-
-        // Restoran sayfasında yalnızca onaylı yorumları yükleme fonksiyonu
-        function loadRestoranYorumlar(restoranAdi) {
-            const yorumlarListesi = document.getElementById('restoranYorumlarListesi');
-            yorumlarListesi.innerHTML = '';
-
-            let yorumlar = JSON.parse(localStorage.getItem('yorumlar')) || [];
-
-            // Restoran adına göre onaylı yorumları filtrele
-            let onayliYorumlar = yorumlar.filter(function(yorum) {
-                return yorum.onayli === true && yorum.restoranAdi === restoranAdi; // Yalnızca onaylanmış ve belirtilen restoran için yapılan yorumlar
-            });
-
-            onayliYorumlar.forEach(function(yorum) {
-                const yorumDiv = document.createElement('div');
-                yorumDiv.className = 'bg-white p-4 rounded-lg shadow-md';
-
-                // Kullanıcıdan gelen verileri textContent ile güvenli bir şekilde ekleyin
-                const yemekAdiP = document.createElement('p');
-                yemekAdiP.className = 'text-gray-800';
-                yemekAdiP.innerHTML = `<strong>${yorum.yemekAdi || yorum.restoranAdi}</strong> için yapılan yorum:`;
-
-                const yorumP = document.createElement('p');
-                yorumP.className = 'text-gray-600 mt-2';
-                yorumP.textContent = yorum.yorum; // Yorum içeriği güvenli bir şekilde ekleniyor
-
-                yorumDiv.appendChild(yemekAdiP);
-                yorumDiv.appendChild(yorumP);
-
-                yorumlarListesi.appendChild(yorumDiv);
-            });
-
-            // Eğer onaylı yorum yoksa bilgilendirme mesajı
-            if (onayliYorumlar.length === 0) {
-                yorumlarListesi.innerHTML = '<p class="text-gray-600">Bu restoran için henüz onaylanmış yorum yok.</p>';
-            }
+            let adminYorumlar = JSON.parse(localStorage.getItem('adminYorumlar')) || [];
+            adminYorumlar.splice(index, 1); // Yorum siliniyor
+            localStorage.setItem('adminYorumlar', JSON.stringify(adminYorumlar));
+            loadRestoranYorumlar(); // Listeyi yeniden yükle
         }
     </script>
+
 </body>
 </html>

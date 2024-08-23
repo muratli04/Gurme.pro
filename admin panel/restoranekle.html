@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurme - Admin Paneli</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-red-500 via-purple-500 to-pink-500 p-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="text-white text-lg font-semibold">REASTORANLAR</div>
+            <div class="flex space-x-4 items-center">
+                <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
+                <a href="/public/restoranlar.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="bg-gradient-to-r from-pink-500 via-purple-500 to-red-500 w-full md:w-64 text-white md:h-screen flex-shrink-0">
+            <ul class="space-y-2">
+                <li>
+                    <a href="/public/adminpanel.html" class="block p-4 hover:bg-purple-700">Admin Panel</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-purple-700">Yemekler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-purple-700">Yorumlar</a>
+                </li>
+                <li>
+                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-purple-700">Kategoriler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-purple-700">Yemek Ekle</a>
+                </li>
+                <li>
+                    <a href="/admin panel/restoranekle.html" class="block p-4 hover:bg-purple-700">Restoranlar</a>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="container mx-auto px-4 md:px-8">
+            <!-- Restoran Ekleme Formu -->
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Yeni Restoran Ekle</h2>
+                <form id="restaurantForm" class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-gray-700">Restoran Adı:</label>
+                        <input type="text" id="name" name="name" class="w-full border border-gray-300 rounded px-4 py-2 mt-1" required>
+                    </div>
+
+                    <div>
+                        <label for="city" class="block text-gray-700">Şehir:</label>
+                        <input type="text" id="city" name="city" class="w-full border border-gray-300 rounded px-4 py-2 mt-1" required>
+                    </div>
+
+                    <div>
+                        <label for="imageUrl" class="block text-gray-700">Restoran Görsel URL:</label>
+                        <input type="text" id="imageUrl" name="imageUrl" class="w-full border border-gray-300 rounded px-4 py-2 mt-1" placeholder="Görsel URL'si girin">
+                    </div>
+
+                    <div>
+                        <label for="imageFile" class="block text-gray-700">Restoran Görsel Dosya:</label>
+                        <input type="file" id="imageFile" name="imageFile" class="w-full border border-gray-300 rounded px-4 py-2 mt-1" accept="image/*">
+                    </div>
+
+                    <div>
+                        <label for="rating" class="block text-gray-700">Puan (1-5):</label>
+                        <input type="number" id="rating" name="rating" class="w-full border border-gray-300 rounded px-4 py-2 mt-1" min="1" max="5" required>
+                    </div>
+
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">Ekle</button>
+                </form>
+            </div>
+
+            <!-- Eklenen Restoranların Şehirlere Göre Listesi -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Eklenen Restoranlar</h2>
+                <div id="cityRestaurants">
+                    <!-- Restoranlar şehirlere göre burada listelenecek -->
+                    <p class="text-gray-600">Henüz eklenmiş bir restoran yok.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let restaurantsByCity = JSON.parse(localStorage.getItem('restaurantsByCity')) || {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCityRestaurants();
+        });
+
+        document.getElementById('restaurantForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            addRestaurant();
+        });
+
+        function addRestaurant() {
+            const name = document.getElementById('name').value;
+            const city = document.getElementById('city').value;
+            const imageUrlInput = document.getElementById('imageUrl').value;
+            const imageFileInput = document.getElementById('imageFile').files[0];
+            const rating = document.getElementById('rating').value;
+
+            // Eğer URL varsa, URL'yi kullan; yoksa dosyadan yüklenen resmi kullan
+            let imageUrl = imageUrlInput;
+
+            if (!imageUrl && imageFileInput) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imageUrl = event.target.result;  // Base64 formatında resmi alıyoruz
+                    saveRestaurant(name, city, imageUrl, rating);
+                }
+                reader.readAsDataURL(imageFileInput);
+            } else {
+                saveRestaurant(name, city, imageUrl, rating);
+            }
+        }
+
+        function saveRestaurant(name, city, imageUrl, rating) {
+            if (!restaurantsByCity[city]) {
+                restaurantsByCity[city] = [];
+            }
+
+            const newRestaurant = { name, imageUrl, rating };
+            restaurantsByCity[city].push(newRestaurant);
+
+            localStorage.setItem('restaurantsByCity', JSON.stringify(restaurantsByCity));
+            updateCityRestaurants();
+            document.getElementById('restaurantForm').reset();
+        }
+
+        function updateCityRestaurants() {
+            const cityRestaurantsDiv = document.getElementById('cityRestaurants');
+            cityRestaurantsDiv.innerHTML = ''; 
+
+            for (let city in restaurantsByCity) {
+                const citySection = document.createElement('div');
+                citySection.classList.add('city-section', 'mb-6');
+
+                const cityTitle = document.createElement('h3');
+                cityTitle.classList.add('text-xl', 'font-bold', 'text-gray-800', 'mb-4');
+                cityTitle.textContent = city;
+                citySection.appendChild(cityTitle);
+
+                const restaurantTable = document.createElement('table');
+                restaurantTable.classList.add('w-full', 'border-collapse', 'mb-4');
+
+                const headerRow = document.createElement('tr');
+                headerRow.innerHTML = `
+                    <th class="border bg-gray-100 px-4 py-2 text-left">Restoran Adı</th>
+                    <th class="border bg-gray-100 px-4 py-2 text-left">Puan</th>
+                    <th class="border bg-gray-100 px-4 py-2 text-left">Puanı Güncelle</th>
+                    <th class="border bg-gray-100 px-4 py-2 text-left">Sil</th>
+                `;
+                restaurantTable.appendChild(headerRow);
+
+                restaurantsByCity[city].forEach((restaurant, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="border px-4 py-2">${restaurant.name}</td>
+                        <td class="border px-4 py-2">${restaurant.rating}</td>
+                        <td class="border px-4 py-2">
+                            <input type="number" min="1" max="5" value="${restaurant.rating}" class="border rounded px-2 py-1" onchange="updateRating('${city}', ${index}, this.value)">
+                        </td>
+                        <td class="border px-4 py-2">
+                            <button onclick="deleteRestaurant('${city}', ${index})" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded">Sil</button>
+                        </td>
+                    `;
+                    restaurantTable.appendChild(row);
+                });
+
+                citySection.appendChild(restaurantTable);
+                cityRestaurantsDiv.appendChild(citySection);
+            }
+
+            if (Object.keys(restaurantsByCity).length === 0) {
+                cityRestaurantsDiv.innerHTML = '<p class="text-gray-600">Henüz eklenmiş bir restoran yok.</p>';
+            }
+        }
+
+        function updateRating(city, index, newRating) {
+            restaurantsByCity[city][index].rating = newRating;
+            localStorage.setItem('restaurantsByCity', JSON.stringify(restaurantsByCity));
+            updateCityRestaurants();
+        }
+
+        function deleteRestaurant(city, index) {
+            restaurantsByCity[city].splice(index, 1);
+
+            if (restaurantsByCity[city].length === 0) {
+                delete restaurantsByCity[city];
+            }
+
+            localStorage.setItem('restaurantsByCity', JSON.stringify(restaurantsByCity));
+            updateCityRestaurants();
+        }
+    </script>
+
+</body>
+</html>

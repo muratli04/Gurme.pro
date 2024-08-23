@@ -9,103 +9,231 @@
 <body class="bg-gray-100">
 
     <!-- Navbar -->
-    <nav class="bg-gray-900 p-4 shadow-md">
+    <nav class="bg-gradient-to-r from-red-500 via-purple-500 to-pink-500 p-4 shadow-md">
         <div class="container mx-auto flex items-center justify-between">
             <div class="text-white text-lg font-semibold">YEMEK EKLE</div>
             <div class="flex space-x-4 items-center">
                 <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
                 <a href="/public/index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
-                <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
             </div>
         </div>
     </nav>
-    <div class="flex flex-col md:flex-row">
 
+    <!-- Main Content -->
+    <div class="flex">
         <!-- Sidebar -->
-        <aside class="bg-gray-600 w-full md:w-64 text-white md:h-screen flex-shrink-0">
-            <div class="p-4 text-xl font-semibold">Menü</div>
+        <aside class="bg-gradient-to-r from-pink-500 via-purple-500 to-red-500 w-full md:w-64 text-white md:h-screen flex-shrink-0">
             <ul class="space-y-2">
                 <li>
-                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-gray-700">Yemekler</a>
+                    <a href="/public/adminpanel.html" class="block p-4 hover:bg-purple-700">Admin Panel</a>
                 </li>
                 <li>
-                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-gray-700">Yorumlar</a>
+                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-purple-700">Yemekler</a>
                 </li>
                 <li>
-                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-gray-700">Kategoriler</a>
+                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-purple-700">Yorumlar</a>
                 </li>
                 <li>
-                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-gray-700">Yemek Ekle
-                    </a>
+                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-purple-700">Kategoriler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-purple-700">Yemek Ekle</a>
+                </li>
+                <li>
+                    <a href="/admin panel/restoranekle.html" class="block p-4 hover:bg-purple-700">Restoranlar</a>
                 </li>
             </ul>
         </aside>
 
-        <div class="container mx-auto p-8">
-            <h1 class="text-3xl font-bold mb-4">Yemek Ekle</h1>
-    
-            <form id="yemekForm" class="mb-8">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-4">Yemek Ekle</h1>
+
+        <form id="yemekForm" class="mb-8">
+            <div class="mb-4">
+                <label for="yemekAdi" class="block text-gray-700 font-bold mb-2">Yemek Adı:</label>
+                <input type="text" id="yemekAdi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label for="yemekAciklamasi" class="block text-gray-700 font-bold mb-2">Yemek Açıklaması:</label>
+                <textarea id="yemekAciklamasi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+            </div>
+
+            <!-- Resim Yükleme Alanı -->
+            <div class="mb-4">
+                <label for="yemekResmiUrl" class="block text-gray-700 font-bold mb-2">Yemek Resim URL'si:</label>
+                <input type="text" id="yemekResmiUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Yemek Resim URL'si">
+            </div>
+
+            <div class="mb-4">
+                <label for="yemekResmiDosya" class="block text-gray-700 font-bold mb-2">Yemek Resim Dosyası:</label>
+                <input type="file" id="yemekResmiDosya" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" accept="image/*">
+            </div>
+
+            <div class="mb-4">
+                <img id="previewImage" src="" alt="Resim Önizlemesi" class="hidden w-32 h-32 object-cover">
+            </div>
+
+            <!-- Kategori -->
+            <div class="mb-4">
+                <label for="yemekKategorisi" class="block text-gray-700 font-bold mb-2">Yemek Kategorisi:</label>
+                <select id="yemekKategorisi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <option value="Başlangıç">Başlangıç</option>
+                    <option value="Ana yemek">Ana yemek</option>
+                    <option value="Tatlılar">Tatlılar</option>
+                </select>
+            </div>
+
+            <!-- Dinamik Restoran ve Şehir Yükleme -->
+            <div class="mb-4">
+                <label for="restoranSehirSecim" class="block text-gray-700 font-bold mb-2">Restoran ve Şehir:</label>
+                <select id="restoranSehirSecim" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <option value="">Restoran ve Şehir Seçin</option>
+                    <option value="manuel">Manuel Olarak Ekle</option> <!-- Manuel giriş seçeneği -->
+                </select>
+            </div>
+
+            <!-- Manuel Restoran ve Şehir Ekleme -->
+            <div id="manuelEkleme" class="hidden">
                 <div class="mb-4">
-                    <label for="yemekAdi" class="block text-gray-700 font-bold mb-2">Yemek Adı:</label>
-                    <input type="text" id="yemekAdi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <label for="manuelRestoranAdi" class="block text-gray-700 font-bold mb-2">Restoran Adı (Manuel):</label>
+                    <input type="text" id="manuelRestoranAdi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
+
                 <div class="mb-4">
-                    <label for="yemekAciklamasi" class="block text-gray-700 font-bold mb-2">Yemek Açıklaması:</label>
-                    <textarea id="yemekAciklamasi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+                    <label for="manuelSehirAdi" class="block text-gray-700 font-bold mb-2">Şehir Adı (Manuel):</label>
+                    <input type="text" id="manuelSehirAdi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
-                <div class="mb-4">
-                    <label for="yemekResmi" class="block text-gray-700 font-bold mb-2">Yemek Resim URL'si:</label>
-                    <input type="text" id="yemekResmi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="mb-4">
-                    <label for="yemekKategorisi" class="block text-gray-700 font-bold mb-2">Yemek Kategorisi:</label>
-                    <select id="yemekKategorisi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        <option value="baslangiclar">Başlangıçlar</option>
-                        <option value="ana-yemekler">Ana Yemekler</option>
-                        <option value="tatlilar">Tatlılar</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label for="restoranAdi" class="block text-gray-700 font-bold mb-2">Restoran Adı:</label>
-                    <input type="text" id="restoranAdi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Ekle
-                </button>
-            </form>
-        </div>
-    
-        <script>
-            // Form gönderildiğinde yemek ekle
-            document.getElementById('yemekForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                addYemek();
-            });
-    
-            // Yemek ekleme fonksiyonu
-            function addYemek() {
-                const yemekAdi = document.getElementById('yemekAdi').value;
-                const yemekAciklamasi = document.getElementById('yemekAciklamasi').value;
-                const yemekResmi = document.getElementById('yemekResmi').value;
-                const yemekKategorisi = document.getElementById('yemekKategorisi').value;
-                const restoranAdi = document.getElementById('restoranAdi').value;
-    
-                const yeniYemek = {
-                    adi: yemekAdi,
-                    aciklama: yemekAciklamasi,
-                    resim: yemekResmi,
-                    kategori: yemekKategorisi,
-                    restoran: restoranAdi,
-                    onayli: false
-                };
-    
-                let adminYemekler = JSON.parse(localStorage.getItem('adminYemekler')) || [];
-                adminYemekler.push(yeniYemek);
-                localStorage.setItem('adminYemekler', JSON.stringify(adminYemekler));
-    
-                document.getElementById('yemekForm').reset(); // Formu temizle
-                alert('Yemek eklendi ve admin paneline yönlendirildi!');
+            </div>
+
+            <div class="mb-4">
+                <label for="puan" class="block text-gray-700 font-bold mb-2">Puan (1-5):</label>
+                <input type="number" id="puan" min="1" max="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Ekle</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRestaurants(); // Restoranları yükle
+            toggleManuelEkleme(); // Manuel ekleme seçeneğini başlat
+        });
+
+        // Restoran ve şehir listesini localStorage'dan yükle
+        function loadRestaurants() {
+            let restaurantsByCity = JSON.parse(localStorage.getItem('restaurantsByCity')) || {};
+            const restoranSehirSelect = document.getElementById('restoranSehirSecim');
+
+            for (let city in restaurantsByCity) {
+                restaurantsByCity[city].forEach(restaurant => {
+                    const option = document.createElement('option');
+                    option.value = `${restaurant.name}, ${city}`;
+                    option.textContent = `${restaurant.name} - ${city}`;
+                    restoranSehirSelect.appendChild(option);
+                });
             }
-        </script>
+        }
+
+        // Manuel ekleme seçeneği için toggle fonksiyonu
+        function toggleManuelEkleme() {
+            const restoranSehirSelect = document.getElementById('restoranSehirSecim');
+            const manuelEklemeDiv = document.getElementById('manuelEkleme');
+
+            restoranSehirSelect.addEventListener('change', function() {
+                if (restoranSehirSelect.value === 'manuel') {
+                    manuelEklemeDiv.classList.remove('hidden');
+                } else {
+                    manuelEklemeDiv.classList.add('hidden');
+                }
+            });
+        }
+
+        // Yemek ekleme fonksiyonu
+        document.getElementById('yemekForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            addYemek();
+        });
+
+        function addYemek() {
+            const yemekAdi = document.getElementById('yemekAdi').value;
+            const yemekAciklamasi = document.getElementById('yemekAciklamasi').value;
+            const yemekResmiUrl = document.getElementById('yemekResmiUrl').value;
+            const yemekResmiDosya = document.getElementById('yemekResmiDosya').files[0];
+            const yemekKategorisi = document.getElementById('yemekKategorisi').value;
+            const restoranSehirSecim = document.getElementById('restoranSehirSecim').value;
+            const puan = document.getElementById('puan').value;
+
+            let restoranAdi, sehirAdi;
+            let yemekResmi = yemekResmiUrl; // Varsayılan olarak URL'deki resmi kullan
+
+            // Eğer kullanıcı manuel olarak restoran ve şehir eklemek isterse
+            if (restoranSehirSecim === 'manuel') {
+                restoranAdi = document.getElementById('manuelRestoranAdi').value;
+                sehirAdi = document.getElementById('manuelSehirAdi').value;
+
+                // Yeni restoranı localStorage'a da kaydedelim
+                let restaurantsByCity = JSON.parse(localStorage.getItem('restaurantsByCity')) || {};
+                if (!restaurantsByCity[sehirAdi]) {
+                    restaurantsByCity[sehirAdi] = [];
+                }
+                restaurantsByCity[sehirAdi].push({ name: restoranAdi });
+                localStorage.setItem('restaurantsByCity', JSON.stringify(restaurantsByCity));
+
+            } else {
+                // Kayıtlı restorandan şehir ve restoran adını al
+                [restoranAdi, sehirAdi] = restoranSehirSecim.split(", ");
+            }
+
+            // Eğer dosya yüklenmişse onu kullan
+            if (yemekResmiDosya) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    yemekResmi = event.target.result; // Base64 formatında resmi alıyoruz
+                    saveYemek(yemekAdi, yemekAciklamasi, yemekResmi, yemekKategorisi, restoranAdi, sehirAdi, puan);
+                };
+                reader.readAsDataURL(yemekResmiDosya);
+            } else {
+                // Eğer URL girilmişse onu kullan
+                saveYemek(yemekAdi, yemekAciklamasi, yemekResmi, yemekKategorisi, restoranAdi, sehirAdi, puan);
+            }
+        }
+
+        function saveYemek(yemekAdi, yemekAciklamasi, yemekResmi, yemekKategorisi, restoranAdi, sehirAdi, puan) {
+            const yeniYemek = {
+                adi: yemekAdi,
+                aciklama: yemekAciklamasi,
+                resim: yemekResmi,
+                kategori: yemekKategorisi,
+                restoran: restoranAdi,
+                sehir: sehirAdi,
+                puan: puan,
+                onayli: false // Yemek onaylanmamış olarak eklenecek
+            };
+
+            let adminYemekler = JSON.parse(localStorage.getItem('adminYemekler')) || [];
+            adminYemekler.push(yeniYemek);
+            localStorage.setItem('adminYemekler', JSON.stringify(adminYemekler));
+
+            document.getElementById('yemekForm').reset(); // Formu sıfırla
+            document.getElementById('previewImage').classList.add('hidden'); // Resim önizlemesini gizle
+            alert('Yemek başarıyla eklendi ve admin paneline gönderildi!');
+        }
+
+        // Resim dosyası seçildiğinde önizleme yap
+        document.getElementById('yemekResmiDosya').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById('previewImage');
+                    previewImage.src = e.target.result;
+                    previewImage.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
 </body>
 </html>

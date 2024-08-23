@@ -16,9 +16,7 @@
                 </div>
                 <div class="flex space-x-4 items-center">
                     <a href="/profile.html" class="bg-gray-700 hover:bg-green-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
-                <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-red-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
-            </div>
-        </div>
+                    <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-red-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
                 </div>
             </div>
         </div>
@@ -66,7 +64,7 @@ Murat
     <!-- Footer -->
     <footer class="bg-red-900 text-white py-4 mt-10">
         <div class="container mx-auto text-center">
-            <p>&copy; </p>
+            <p>&copy; 2024 Gurme</p>
         </div>
     </footer>
 
@@ -77,6 +75,39 @@ Murat
 
         const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea');
 
+        // Verileri Local Storage'dan yükleme
+        function loadProfileData() {
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {
+                username: 'Murat Atlı',
+                email: 'admin@gmail.com',
+                phone: '+90 123 456 7890',
+                address: 'Lefkoşa,Kıbrıs',
+                about: 'Murat'
+            };
+
+            document.getElementById('username').value = profileData.username;
+            document.getElementById('email').value = profileData.email;
+            document.getElementById('phone').value = profileData.phone;
+            document.getElementById('address').value = profileData.address;
+            document.getElementById('about').value = profileData.about;
+        }
+
+        // Verileri Local Storage'a kaydetme
+        function saveProfileData() {
+            const profileData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                about: document.getElementById('about').value
+            };
+
+            localStorage.setItem('profileData', JSON.stringify(profileData));
+        }
+
+        // Sayfa yüklendiğinde profil verilerini Local Storage'dan yükle
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+
         editButton.addEventListener('click', function() {
             inputs.forEach(input => input.disabled = false);
             editButton.classList.add('hidden');
@@ -85,6 +116,7 @@ Murat
         });
 
         cancelButton.addEventListener('click', function() {
+            loadProfileData(); // Local Storage'dan eski verileri tekrar yükle
             inputs.forEach(input => input.disabled = true);
             editButton.classList.remove('hidden');
             saveButton.classList.add('hidden');
@@ -93,6 +125,7 @@ Murat
 
         document.getElementById('profileForm').addEventListener('submit', function(event) {
             event.preventDefault();
+            saveProfileData(); // Verileri kaydet
             inputs.forEach(input => input.disabled = true);
             editButton.classList.remove('hidden');
             saveButton.classList.add('hidden');

@@ -8,91 +8,76 @@
 </head>
 <body class="bg-gray-100">
 
-    <!-- Navbar -->
-    <nav class="bg-gray-900 p-4 shadow-md">
-        <div class="container mx-auto flex items-center justify-between">
-            <div class="text-white text-lg font-semibold">YEMEKLER</div>
-            <div class="flex space-x-4 items-center">
-                <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
-                <a href="/public/index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
-                <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
-            </div>
+   <!-- Navbar -->
+   <nav class="bg-gradient-to-r from-red-500 via-purple-500 to-pink-500 p-4 shadow-md">
+    <div class="container mx-auto flex items-center justify-between">
+        <div class="text-white text-lg font-semibold">YEMEKLER</div>
+        <div class="flex space-x-4 items-center">
+            <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
+            <a href="/public/index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
         </div>
-    </nav>
-    
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside class="bg-gray-600 w-full md:w-64 text-white md:h-screen flex-shrink-0">
-            <div class="p-4 text-xl font-semibold">Menü</div>
-            <ul class="space-y-2">
-                <li>
-                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-gray-700">Yemekler</a>
-                </li>
-                <li>
-                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-gray-700">Yorumlar</a>
-                </li>
-                <li>
-                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-gray-700">Kategoriler</a>
-                </li>
-                <li>
-                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-gray-700">Yemek Ekle</a>
-                </li>
-            </ul>
-        </aside>
+    </div>
+</nav>
 
-        <!-- Yemekler Listesi -->
-        <div class="container mx-auto p-8">
-            <h1 class="text-3xl font-bold mb-8">Yemekler</h1>
-            <div id="kategoriListesi">
-                <!-- Kategoriler burada listelenecek -->
-            </div>
+<!-- Main Content -->
+<div class="flex">
+    <!-- Sidebar -->
+    <aside class="bg-gradient-to-r from-pink-500 via-purple-500 to-red-500 w-full md:w-64 text-white md:h-screen flex-shrink-0">
+        <ul class="space-y-2">
+            <li>
+                <a href="/public/adminpanel.html" class="block p-4 hover:bg-purple-700">Admin Panel</a>
+            </li>
+            <li>
+                <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-purple-700">Yemekler</a>
+            </li>
+            <li>
+                <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-purple-700">Yorumlar</a>
+            </li>
+            <li>
+                <a href="/admin panel/kategori.html" class="block p-4 hover:bg-purple-700">Kategoriler</a>
+            </li>
+            <li>
+                <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-purple-700">Yemek Ekle</a>
+            </li>
+            <li>
+                <a href="/admin panel/restoranekle.html" class="block p-4 hover:bg-purple-700">Restoranlar</a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="container mx-auto p-8">
+        <div id="yemekListesi" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Onaylanmış yemekler -->
         </div>
     </div>
 
     <script>
-        // Sayfa yüklendiğinde onaylı yemekleri yükle
         document.addEventListener('DOMContentLoaded', function() {
-            loadKategoriler();
+            loadOnayliYemekler();
         });
 
-        // Yemekleri kategorilere göre ayırma ve yükleme fonksiyonu
-        function loadKategoriler() {
-            const kategoriListesi = document.getElementById('kategoriListesi');
-            kategoriListesi.innerHTML = '';
+        // Onaylanmış yemekleri yükleme fonksiyonu
+        function loadOnayliYemekler() {
+            const yemekListesi = document.getElementById('yemekListesi');
+            yemekListesi.innerHTML = '';
 
             let yemekler = JSON.parse(localStorage.getItem('yemekler')) || [];
-            let kategoriler = {
-                'baslangiclar': [],
-                'ana-yemekler': [],
-                'tatlilar': []
-            };
 
-            yemekler.forEach(function(yemek) {
-                kategoriler[yemek.kategori].push(yemek);
-            });
-
-            Object.keys(kategoriler).forEach(function(kategori) {
-                if (kategoriler[kategori].length > 0) {
-                    const kategoriDiv = document.createElement('div');
-                    kategoriDiv.className = 'mb-8';
-
-                    kategoriDiv.innerHTML = `
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">${kategori.charAt(0).toUpperCase() + kategori.slice(1)}</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            ${kategoriler[kategori].map((yemek, index) => `
-                                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                                    <img class="w-full h-48 object-cover" src="${yemek.resim}" alt="${yemek.adi}">
-                                    <div class="p-4">
-                                        <h3 class="text-xl font-semibold text-gray-800">${yemek.adi}</h3>
-                                        <p class="text-gray-600 mt-2">${yemek.aciklama}</p>
-                                        <p class="text-gray-500 mt-2">Kategori: ${yemek.kategori}</p>
-                                        <button onclick="deleteYemek(${index})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Sil</button>
-                                    </div>
-                                </div>
-                            `).join('')}
+            yemekler.forEach(function(yemek, index) {
+                if (yemek.onayli) { // Sadece onaylı yemekleri göster
+                    const yemekDiv = document.createElement('div');
+                    yemekDiv.className = 'bg-white rounded-lg shadow-md overflow-hidden';
+                    yemekDiv.innerHTML = `
+                        <div class="p-4">
+                            <img class="w-full h-32 object-cover mb-2" src="${yemek.resim}" alt="${yemek.adi}">
+                            <h3 class="text-xl font-semibold">${yemek.adi}</h3>
+                            <p>${yemek.aciklama}</p>
+                            <p><strong>Kategori:</strong> ${yemek.kategori}</p>
+                            <p><strong>Restoran:</strong> ${yemek.restoran}</p>
+                            <button onclick="deleteYemek(${index})" class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded mt-4">Sil</button>
                         </div>
                     `;
-                    kategoriListesi.appendChild(kategoriDiv);
+                    yemekListesi.appendChild(yemekDiv);
                 }
             });
         }
@@ -100,10 +85,12 @@
         // Yemek silme fonksiyonu
         function deleteYemek(index) {
             let yemekler = JSON.parse(localStorage.getItem('yemekler')) || [];
-            yemekler.splice(index, 1);
-            localStorage.setItem('yemekler', JSON.stringify(yemekler));
-            loadKategoriler(); // Listeyi güncelle
+            yemekler.splice(index, 1); 
+            localStorage.setItem('yemekler', JSON.stringify(yemekler)); 
+            loadOnayliYemekler();
+            alert('Yemek silindi!');
         }
     </script>
+
 </body>
 </html>

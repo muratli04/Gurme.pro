@@ -9,13 +9,12 @@
 <body class="bg-gray-100">
 
     <!-- Navbar -->
-    <nav class="bg-gray-900 p-4 shadow-md">
+    <nav class="bg-gradient-to-r from-red-500 via-purple-500 to-pink-500 p-4 shadow-md">
         <div class="container mx-auto flex items-center justify-between">
             <div class="text-white text-lg font-semibold">KATEGORİLER</div>
             <div class="flex space-x-4 items-center">
                 <a href="/profile.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Profil</a>
                 <a href="/public/index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Çıkış Yap</a>
-                <a href="/public/adminpanel.html" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold h-8 px-4 rounded flex items-center">Admin Panel</a>
             </div>
         </div>
     </nav>
@@ -23,27 +22,32 @@
     <!-- Main Content -->
     <div class="flex">
         <!-- Sidebar -->
-        <aside class="bg-gray-600 w-full md:w-64 text-white md:h-screen flex-shrink-0">
-            <div class="p-4 text-xl font-semibold">Menü</div>
+        <aside class="bg-gradient-to-r from-pink-500 via-purple-500 to-red-500 w-full md:w-64 text-white md:h-screen flex-shrink-0">
             <ul class="space-y-2">
                 <li>
-                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-gray-700">Yemekler</a>
+                    <a href="/public/adminpanel.html" class="block p-4 hover:bg-purple-700">Admin Panel</a>
                 </li>
                 <li>
-                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-gray-700">Yorumlar</a>
+                    <a href="/admin panel/yemekler.html" class="block p-4 hover:bg-purple-700">Yemekler</a>
                 </li>
                 <li>
-                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-gray-700">Kategoriler</a>
+                    <a href="/admin panel/yorumlar.html" class="block p-4 hover:bg-purple-700">Yorumlar</a>
                 </li>
                 <li>
-                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-gray-700">Yemek Ekle</a>
+                    <a href="/admin panel/kategori.html" class="block p-4 hover:bg-purple-700">Kategoriler</a>
+                </li>
+                <li>
+                    <a href="/admin panel/yemekekle.html" class="block p-4 hover:bg-purple-700">Yemek Ekle</a>
+                </li>
+                <li>
+                    <a href="/admin panel/restoranekle.html" class="block p-4 hover:bg-purple-700">Restoranlar</a>
                 </li>
             </ul>
         </aside>
+    
         
         <!-- Main Content -->
         <div class="container mx-auto p-8">
-            <h1 class="text-3xl font-bold mb-4">Yemek Kategorileri</h1>
 
             <div id="kategoriListesi" class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Kategoriler burada listelenecek -->
